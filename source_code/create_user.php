@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $upload_dir = "uploads/"; 
     $file_path = $upload_dir . basename($qualification_file['name']);
 
-    if (move_uploaded_file($qualification_file['tmp_name'], $file_path)) {
+    //if (move_uploaded_file($qualification_file['tmp_name'], $file_path)) {
         $params = [
             ["i", $org_id],
             ["s", $name],
@@ -68,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Create User Success, ";
         echo "Upload File Success, file path:$file_path";
         
-    } else {
-        echo "Save file fail.";
-    }
+    //} else {
+        //echo "Save file fail.";
+    //}
     
 
 }
