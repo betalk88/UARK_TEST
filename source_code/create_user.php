@@ -24,6 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if (!isset($_FILES['qualification_file'])) {
+        echo "please select file.";
+        exit;
+    }
+
     $name = $_POST['name'];
     $birthday = isset($_POST['birthday']) ? $_POST['birthday'] : "0000-00-00";
     $email = $_POST['email'];
@@ -33,12 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     check_post ($name, $birthday, $email, $account, $password, $qualification_file);
 
-    
-    
-    $upload_dir = "uploads/"; 
-    $file_path = $upload_dir . basename($qualification_file['name']);
-
-    //if (move_uploaded_file($qualification_file['tmp_name'], $file_path)) {
+    if (updload_file($qualification_file, $file_path)) {
         $params = [
             ["i", $org_id],
             ["s", $name],
@@ -68,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Create User Success, ";
         echo "Upload File Success, file path:$file_path";
         
-    //} else {
-        //echo "Save file fail.";
-    //}
+    } else {
+       // echo "Save file fail.";
+    }
     
 
 }
@@ -106,7 +106,6 @@ function check_post ($name, $birthday, $email, $account, $password, $qualificati
         echo "password is empty.";
         exit;
     }
-
 
     if ($qualification_file['error'] !== UPLOAD_ERR_OK) {
         echo "upload file fail";
@@ -160,6 +159,21 @@ function createAppleFile ($params) {
     close_connect($conn);
 
     return $id;
+}
+
+function updload_file ($file ,&$file_path) {
+
+    $upload_dir = "uploads"; 
+
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir);
+    }
+
+    $ext = explode(".",$file['name']);
+    $filename = sprintf("%s.%s", md5($file['name']), $ext[1]);
+    $file_path = $upload_dir . '/' . $filename;
+
+    return move_uploaded_file($file['tmp_name'], $file_path);
 }
 
 ?>
